@@ -16,9 +16,9 @@ public interface PizzaDao {
     Pizza getByIds(int Id);
 
     @Insert
-    void insert(Pizza heartrate);
+    void insert(Pizza pizza);
 
     @Delete
-    void delete(Pizza heartrate);
+    void delete(Pizza pizza);
 
 }
