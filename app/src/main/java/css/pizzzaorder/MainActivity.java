@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -37,18 +39,23 @@ public class MainActivity extends AppCompatActivity {
         // implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        seekBarSize = findViewById(R.id.seekBarSize);
-        buttonAddToOrder = findViewById(R.id.buttonAddToOrder);
-        buttonPlaceOrder = findViewById(R.id.buttonPlaceOrder);
         textViewSize = findViewById(R.id.textViewSize);
-        textOrder = findViewById(R.id.editTextOrder);
+        textOrder = findViewById(R.id.textOrder);
         chipPepperoni = findViewById(R.id.chipPepperoni);
         chipChicken = findViewById(R.id.chipChicken);
         chipGreenPepper = findViewById(R.id.chipGreenPeppers);
 
-        /***
-         *   Handle SeekBar changes
-         */
+        setupSeekBar();
+        setupAddToOrderButton();
+        setPlaceOrderButtons();
+        setupLiveDataObserver();
+    }
+
+    /***
+     *   Handle SeekBar changes
+     */
+    private void setupSeekBar() {
+        seekBarSize = findViewById(R.id.seekBarSize);
         seekBarSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -62,10 +69,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {     }
         });
+    }
 
-        /***
-         *   Handle Place Order button clicks
-         */
+    /***
+     *   Handle Place Order button clicks
+     */
+    private void setPlaceOrderButtons() {
+        buttonPlaceOrder = findViewById(R.id.buttonPlaceOrder);
         buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,30 +83,34 @@ public class MainActivity extends AppCompatActivity {
                 mainViewModel.placeOrder();
             }
         });
+    }
+
+    private void setupAddToOrderButton () {
         /***
          *   Handle Add To Order button clicks
          */
+        buttonAddToOrder = findViewById(R.id.buttonAddToOrder);
         buttonAddToOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("CIS 3334", "Add To Order button clicked");   // log button click for debugging using "CIS 3334" tag
                 mainViewModel.addToOrder(getToppings(), pizzaSize);
-                textOrder.setText(mainViewModel.getOrder() );
+                //textOrder.setText(mainViewModel.getOrder() );
             }
         });
+    }
 
+    private void setupLiveDataObserver () {
         // Create the observer which updates the UI.
         final Observer<String> statusObserver = new Observer<String>() {
             @Override
             public void onChanged(@Nullable final String newStatus) {
                 // Update the UI, in this case, a TextView.
-                textOrder.setText(textOrder.getText().toString() + "\n" + newStatus );
+                //textOrder.setText(textOrder.getText().toString() + "\n" + newStatus );
+                textOrder.setText(newStatus );
             }
         };
-
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
         mainViewModel.getOrderStatus().observe(this, statusObserver);
-
     }
 
     /***

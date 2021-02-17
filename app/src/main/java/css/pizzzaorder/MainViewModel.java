@@ -15,17 +15,12 @@ import java.util.List;
 //public class MainViewModel extends ViewModel {
 public class MainViewModel extends AndroidViewModel {
 
-    //PizzaRepository pizzaOrder = new PizzaRepository();
     PizzaRepository pizzaOrder;
-    List<String> pizzasOrder;
+    //List<String> pizzasOrder;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
-        Log.d("CIS 3334", "MainViewModel construction with Application link");
         pizzaOrder = new PizzaRepository(application);
-        Log.d("CIS 3334", "MainViewModel construction PizzaRepository created");
-
-        //pizzasOrder = pizzaOrder.getOrder();
     }
 
     // For live data updates from https://developer.android.com/topic/libraries/architecture/livedata
@@ -44,10 +39,10 @@ public class MainViewModel extends AndroidViewModel {
 
     public void placeOrder() {
         orderStatus.postValue("Order Placed");
-        //pizzaOrder.PlaceOrder();
         startPizzaTimer();
     }
 
+    /*
     public String getOrder() {
         String orderText = "Pizzas: \n";
         List<String> pizzasOrder = pizzaOrder.getOrder();
@@ -56,7 +51,15 @@ public class MainViewModel extends AndroidViewModel {
         }
         return orderText;
     }
+    */
 
+    public String getOrderItem(Integer position) {
+        return pizzaOrder.getOrderItem(position);
+    }
+
+    public Integer getOrderSize() {
+        return pizzaOrder.getOrderSize();
+    }
 
     /**
      * This class implements a timer for the baking pizza
